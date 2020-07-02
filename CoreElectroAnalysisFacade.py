@@ -98,7 +98,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         '''
         Метод для выбора пути к файлу путем выхова стандартного диалога выбора файла
         '''
-        fname = QFileDialog.getOpenFileName(self, 'Choose data file for analysis', './data/')
+        fname = QFileDialog.getOpenFileName(self, 'Choose data file for electro-analysis', './data/')
         self.InitFilePathField.setText(fname[0])
 
     def import_data(self):
