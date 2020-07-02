@@ -33,7 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def widgets_adjust(self):
         '''
-        Метод для донастройки виджетов в главном окне программы
+        Method for additional adjustment of widgets in main window of the application
         '''
 
         self.setWindowTitle('CoreElectroAnalysis')
