@@ -1,0 +1,4 @@
+-- Start of developing (v 1.0) April 2020
+-- Added m distribution displaying (v 1.1) 25.04.2020
+-- Added replcement plot of por-ff by por-m (v 1.2) 05.05.2020
+-- Added Buttons set for porosity-m comparison, adjuste Qt interface in QtDesigner (v 1.3) 13.06.2020

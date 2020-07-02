@@ -1,0 +1,1 @@
+pyuic5 C:\Python36\Scripts\CoreElectroAnalysis\ui\CoreElectroAnalysisMainwindow.ui -o C:\Python36\Scripts\CoreElectroAnalysis\CoreElectroAnalysisMainwindow.py
