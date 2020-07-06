@@ -9,7 +9,7 @@ from Calculations_CEA import calculate_m
 
 class ButtonsSetPorosityMAnalysis:
     '''
-    Tools for andjustment Porosity-M plot
+    Tools-pallet for adjustment Porosity-M plot
     '''
     def __init__(self, parent):
         self.Button_plot_porosity_m_function = QToolButton()
