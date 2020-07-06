@@ -6,20 +6,7 @@ from Prepare_data_CEA import prepare_table_data_from_txt, put_table_in_qtable_wi
 from Mpl_CEA import prepare_canvas_and_toolbar, prepare_canvas, plot_m_mean_line, plot_data_on_por_ff, plot_hist_of_m, plot_data_on_por_m
 from Calculations_CEA import calculate_m
 
-
-class ButtonsSetPorosityMAnalysis:
-    '''
-    Tools-pallet for adjustment Porosity-M plot
-    '''
-    def __init__(self, parent):
-        self.Button_plot_porosity_m_function = QToolButton()
-        self.Button_plot_porosity_m_function.setText('m=f(Por)')
-        self.Button_plot_porosity_m_function.setObjectName('Button_plot_porosity_m_function')
-        parent.VerticalLayuot4.addWidget(self.Button_plot_porosity_m_function)
-
-    def delete_buttons_set(self):
-        self.Button_plot_porosity_m_function.setParent(None)
-        del self.Button_plot_porosity_m_function
+from ToolButtonsOperate import ButtonsSetPorosityMAnalysis
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     '''
@@ -79,7 +66,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.VerticalLayuot4 = QVBoxLayout()
             self.ToolbarWidget.setLayout(self.VerticalLayuot4)
-            self.ButtonsSetPorosityMAnalysis = ButtonsSetPorosityMAnalysis(self)
+            self.ToolbarWidget.setFixedWidth(100)
+            self.ButtonsSetPorosityMAnalysis = ButtonsSetPorosityMAnalysis(self.VerticalLayuot4)
 
         print('The print finished')
 
