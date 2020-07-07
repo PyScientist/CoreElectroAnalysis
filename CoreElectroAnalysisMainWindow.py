@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Python36\Scripts\CoreElectroAnalysis\ui\CoreElectroAnalysisMainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -117,6 +117,6 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">C:/Python36/Scripts/CoreElectroAnalysis/data/core_studies_ff.txt</span></p></body></html>"))
         self.LoadDataButton.setText(_translate("MainWindow", "Load data"))
         self.PlotGraphButton.setText(_translate("MainWindow", "Plot data"))
-        self.Mpl_hide_show_button.setText(_translate("MainWindow", "Show Hide MPL"))
-        self.AdjustPorosityMButton.setText(_translate("MainWindow", "Adjust porosiity-m"))
+        self.Mpl_hide_show_button.setText(_translate("MainWindow", "Plot report"))
+        self.AdjustPorosityMButton.setText(_translate("MainWindow", "Adjust porosity-m relation"))
 

@@ -186,7 +186,7 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>Show Hide MPL</string>
+         <string>Plot report</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -208,7 +208,7 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>Adjust porosiity-m</string>
+         <string>Adjust porosity-m relation</string>
         </property>
        </widget>
       </item>
