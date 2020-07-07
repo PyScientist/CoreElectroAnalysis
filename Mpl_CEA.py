@@ -17,14 +17,14 @@ class MyMplCanavas(FigureCanvasQTAgg):
     Класс холста Qt для помещения рисунка Matplotlib
     '''
     def __init__(self, fig):
-        FigureCanvasQTAgg.__init__(self, fig)
+        super().__init__(fig)
         self.setMinimumSize(200,200)
 
 
-def prepare_canvas_and_toolbar(layout = None):
-    '''
+def prepare_abstract_canvas_and_toolbar(layout = None):
+    """
     Функция для инициализации рисунка Matplotlib и его размещения в виджете Qt, добавления панели навигаии
-    '''
+    """
     # Подготовка рисунка и осей
     fig, axes = plot_single_empty_graph()
     # Получение экземпляра класса холста с размещенным рисунком

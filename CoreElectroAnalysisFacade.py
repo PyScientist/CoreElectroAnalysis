@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QSizePolicy, QFileDialog,
 from CoreElectroAnalysisMainWindow import Ui_MainWindow
 
 from Prepare_data_CEA import prepare_table_data_from_txt, put_table_in_qtable_wiget, modify_cells
-from Mpl_CEA import prepare_canvas_and_toolbar, prepare_canvas, plot_m_mean_line, plot_data_on_por_ff, plot_hist_of_m, plot_data_on_por_m
+from Mpl_CEA import prepare_abstract_canvas_and_toolbar, prepare_canvas, plot_m_mean_line, plot_data_on_por_ff, plot_hist_of_m, plot_data_on_por_m
 from Calculations_CEA import calculate_m
 
-from ToolButtonsOperate import ButtonsSetPorosityMAnalysis
+from ToolButtonsOperate import ButtonsSetForPorosityMAnalysis
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     '''
@@ -34,27 +34,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Кнопка для обработки и отображения данных в виджетах matpotlib
         self.PlotGraphButton.clicked.connect(self.plot_data)
         # Кнопка для отображения диаграммы Matplotlib Пористость-m и инструментов к этой диаграмме
-        self.AdjustPorosityMButton.clicked.connect(self.adjustPorosityMMethod)
+        self.AdjustPorosityMButton.clicked.connect(self.adjust_porosity_m_method)
 
         # Создание вертикального размещения в виджете QWidget
         self.companovka_for_mpl = QVBoxLayout(self.MplWidget)
         # Добавляем виджет с холстом матплотлиб для отображеня диаграммы рассеяния
-        self.canvas, self.toolbar = prepare_canvas_and_toolbar(layout=self.companovka_for_mpl)
+        self.canvas, self.toolbar = prepare_abstract_canvas_and_toolbar(layout=self.companovka_for_mpl)
         # Добавляем виджет с холстом матплотлиб для отображеня гистограммы
         self.canvas1 = prepare_canvas(layout=self.companovka_for_mpl)
 
-    def adjustPorosityMMethod(self):
-        if hasattr(self, 'canvas'):
-            self.canvas.setParent(None)
-            del self.canvas
-        if hasattr(self, 'canvas1'):
-            self.canvas1.setParent(None)
-            del self.canvas1
-        if hasattr(self, 'toolbar'):
-            self.toolbar.setParent(None)
-            del self.toolbar
+    def adjust_porosity_m_method(self):
 
-        self.canvas, self.toolbar = prepare_canvas_and_toolbar(layout=self.companovka_for_mpl)
+        print(self.companovka_for_mpl.parent().children()[1:])
+
+        # Check what we have in the QWidget dedicated to plot graphs and delete all from this place
+        for elem in self.companovka_for_mpl.parent().children()[1:]:
+            elem.setParent(None)
+            del elem
+
+        print(self.companovka_for_mpl.parent().children()[1:])
+
+        # Create canvas and toolbar for
+        self.canvas, self.toolbar = prepare_abstract_canvas_and_toolbar(layout=self.companovka_for_mpl)
 
         # Получение ссылки на оси 1
         axes = self.canvas.figure.get_children()[1]
@@ -66,8 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.VerticalLayuot4 = QVBoxLayout()
             self.ToolbarWidget.setLayout(self.VerticalLayuot4)
-            self.ToolbarWidget.setFixedWidth(100)
-            self.ButtonsSetPorosityMAnalysis = ButtonsSetPorosityMAnalysis(self.VerticalLayuot4)
+            self.ButtonsSetPorosityMAnalysis = ButtonsSetForPorosityMAnalysis(self.VerticalLayuot4, self)
 
         print('The print finished')
 

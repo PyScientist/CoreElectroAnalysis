@@ -4,39 +4,62 @@ from PyQt5.QtWidgets import QToolButton
 
 from PyQt5.QtCore import QSize
 
-def add_icon_to_the_button(button=None, icon_path_voc=None):
-    """Place the icon on the button (the link to the button and
-    the vocabulary with path to the icon depends on Mode are input)"""
-    icon = QIcon()
-    mode_list = ['Selected', 'Disabled', 'Normal']
-    for mode in mode_list:
-       if mode in icon_path_voc:
-           pixmap = QPixmap(icon_path_voc[mode])
-           icon.addPixmap(pixmap, QIcon.Mode == mode, QIcon.State == 'On')
-           print(icon_path_voc[mode])
-    button.setIcon(icon)
-    button.setIconSize(QSize(50,50))
 
-class ButtonsSetPorosityMAnalysis:
-    '''
-    Tool Palette for adjustment Porosity-M plot
-    '''
-    def __init__(self, buttonLayout):
+class AbstractButtonForPallet(QToolButton):
+    def __init__(self, path, tooltip, objectName, button_set, application):
+        super().__init__()
+        size = [50,50]
+        icon = QIcon()
+        pixmap = QPixmap(path)
+        icon.addPixmap(pixmap)
+        self.setIcon(icon)
+
+        self.setIconSize(QSize(size[0], size[1]))
+        self.setToolTip(tooltip)
+        self.setObjectName(objectName)
+        button_set.append(self)
+
+
+class ButtonsSetForPorosityMAnalysis:
+    """Tools Palette for adjustment Porosity-M plot"""
+    def __init__(self, button_layout, parent):
         self.tool_buttons = []
 
-        self.Button_plot_porosity_m_function = QToolButton()
-        self.Button_plot_porosity_m_function.setToolTip('create m=f(Por) relation')
+        self.Button_plot_porosity_m_function = AbstractButtonForPallet(path='./figures/function_creation_icon__Normal.png',
+                                                                       tooltip='create m=f(Por) relation',
+                                                                       objectName='Button_plot_porosity_m_function',
+                                                                       button_set = self.tool_buttons,
+                                                                       application=parent)
 
-        icon_path_voc = {'Normal' : './figures/function_creation_icon__Normal.png',
-                         'Disabled': './figures/function_creation_icon__Selected.png'}
+        self.Button_add_m_value = AbstractButtonForPallet(path='./figures/results_icon.png',
+                                                          tooltip='add m values to the table',
+                                                          objectName='Button_add_m_value',
+                                                          button_set = self.tool_buttons,
+                                                          application=parent)
 
-        add_icon_to_the_button(self.Button_plot_porosity_m_function, icon_path_voc)
-        self.Button_plot_porosity_m_function.setObjectName('Button_plot_porosity_m_function')
-        self.tool_buttons.append(self.Button_plot_porosity_m_function)
+        self.Button_Select_dots = AbstractButtonForPallet(path='./figures/select_dots.png',
+                                                          tooltip='select points on the graph',
+                                                          objectName='Button_Select_dots',
+                                                          button_set = self.tool_buttons,
+                                                          application=parent)
 
-        buttonLayout.addWidget(self.Button_plot_porosity_m_function)
+        self.Button_Distributions = AbstractButtonForPallet(path='./figures/Distributions.png',
+                                                            tooltip='plot confidence interval',
+                                                            objectName='Button_Distributions',
+                                                            button_set = self.tool_buttons,
+                                                            application=parent)
+
+        for button in self.tool_buttons:
+            button_layout.addWidget(button)
 
 
     def delete_buttons_set(self):
-        self.Button_plot_porosity_m_function.setParent(None)
-        del self.Button_plot_porosity_m_function
+        def delete_single(button):
+            button.setParent(None)
+            del button
+
+        for button in self.tool_buttons:
+            print(button.objectName())
+            if hasattr(self, F'{button.objectName()}'):
+               delete_single(button)
+
