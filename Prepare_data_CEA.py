@@ -14,8 +14,7 @@ def convert_rows_to_columns(data_massive_to_convert):
     return  data_massive_converted
 
 def prepare_table_data_from_txt(path_to_data, delimeter = '\t', header_row = 1, units_row = 2):
-    r"""
-    функция prepare_table_data_from_txt Версия 1.0
+    """Функция prepare_table_data_from_txt Версия 1.0
     Подготовка табличных данных из txt файла с разделителем \t (знак табуляции) по умолчанию
     Получаем словарь состоящий из
     1) header - заголовки столбцов
@@ -56,11 +55,9 @@ def prepare_table_data_from_txt(path_to_data, delimeter = '\t', header_row = 1, 
         return data_table
 
 def put_table_in_qtable_wiget(header, table_wiget, data):
-    """
-    Function to plot table (на вход список заголовков и данные таблицы) into QTableWidget
+    """Function to plot table (на вход список заголовков и данные таблицы) into QTableWidget
     При помещении таблицы в QTableWidget отдельно показываются заголовки (строка заголовков)
-    Нумеруются ряды (крайняя левая колонка)
-    """
+    Нумеруются ряды (крайняя левая колонка)"""
     table_wiget.setRowCount(len(data[0]))  # Устанавливаем колличество рядов для таблицы
     table_wiget.setColumnCount(len(data))  # Устанавливаем колличество колонок для таблицы
     table_wiget.setHorizontalHeaderLabels(header)  # Устанавливаем в качестве заголовков список шапки
@@ -76,10 +73,8 @@ def put_table_in_qtable_wiget(header, table_wiget, data):
             table_wiget.setItem(y, x, QTableWidgetItem(str(data[x][y])))
 
 def prepare_two_row_data(x_col_name, y_col_name, table):
-    """
-    Подготовка данных двух столбцов из табличного виджета QTableWidget по имени столбцов
-    при возникновении ошибки функция возвращает пустой список иначе список со значениями требуемого ряда
-    """
+    """Подготовка данных двух столбцов из табличного виджета QTableWidget по имени столбцов
+    при возникновении ошибки функция возвращает пустой список иначе список со значениями требуемого ряда"""
     column_one_container = []
     column_two_container = []
     x = None  # Изначально x не задан
@@ -99,11 +94,22 @@ def prepare_two_row_data(x_col_name, y_col_name, table):
     except:
       return column_one_container, column_two_container
 
+def get_data_from_QTableWidget(QTableWidget_input):
+    header = []
+    array = []
+    for column in range(0, QTableWidget_input.columnCount()):
+        header.append(QTableWidget_input.horizontalHeaderItem(column).text())
+        temp_column = []
+        for row in range(0, QTableWidget_input.rowCount()):
+            temp_column.append(QTableWidget_input.item(row, column).text())
+        array.append(temp_column)
+    return header, array
+
+
 def modify_cells(TableWidget):
-    '''
-    Модифицируем ячейки таблицы и растягиваем их
-    '''
+    """Модифицируем ячейки таблицы и растягиваем их"""
     for row in range(TableWidget.rowCount()):
         for column in range(TableWidget.columnCount()):
             TableWidget.item(row, column).setTextAlignment(Qt.AlignCenter)
     TableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
