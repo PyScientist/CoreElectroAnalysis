@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 from PyQt5.QtGui import QIcon,\
                         QPixmap
@@ -16,7 +16,8 @@ from matplotlib import pyplot as plt
 
 from Prepare_data_CEA import prepare_table_data_from_txt,\
                              put_table_in_qtable_wiget,\
-                             modify_cells
+                             modify_cells, \
+                             mnemonics_adjustments
 
 from Mpl_CEA import MyMplCanavas,\
                     prepare_abstract_canvas_and_toolbar,\
@@ -82,7 +83,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         axes.cla()
         plot_data_on_por_m(table=self.InitDataTable, axes=axes)
 
-
         # Check is the tools-palette for porosity-m exist if it is delete it
         if hasattr(self, 'ButtonsSetForPorosityMAnalysis'):
             self.ButtonsSetForPorosityMAnalysis.delete_buttons_set()
@@ -110,9 +110,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Method for importing data from a file and placing it in a table widget
         """
         file_path = self.InitFilePathField.toPlainText()
-        data_voc = prepare_table_data_from_txt(file_path)
-        put_table_in_qtable_wiget(data_voc['header'], self.InitDataTable, data_voc['data'])
-        modify_cells(self.InitDataTable)
+        if os.path.isfile(file_path):
+            data_voc = prepare_table_data_from_txt(file_path)
+
+            mnemonics_adjustments(data_voc['header'])
+
+            put_table_in_qtable_wiget(data_voc['header'], self.InitDataTable, data_voc['data'])
+            modify_cells(self.InitDataTable)
+        else:
+            print (F"File {file_path} is not exists, please correct path and try one more time!")
 
     def plot_data(self):
         """Method for performing calculations and plotting data in matplotlib figures"""

@@ -2,6 +2,25 @@ from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
 
 from PyQt5.QtCore import Qt
 
+
+def mnemonics_adjustments(headers):
+    """Mnemonics adjustments in header according chosen aliases"""
+
+    # Porosity mnemonic dictionary set
+    mnemonics_dict = {'POR': ['POR','Кп','Porosity','Open porosity','Por.'],
+                      'RT' : ['RT','Resistivity','УЭС'],
+                      'RW' : ['RW', 'Water Resistivity']}
+
+    for header in range(len(headers)):  # manipulating headers
+        for alias in mnemonics_dict.keys():  # manipulating aliases
+            for id in range(len(mnemonics_dict[alias])):  # manipulating mnemonics
+                # if mnemonic matches the initial header then header changes to alias
+                if headers[header] == mnemonics_dict[alias][id]:
+                    print(headers[header])
+                    headers[header] = alias
+                    print(headers[header])
+
+
 def convert_rows_to_columns(data_massive_to_convert):
     """
     Переформатирование рядов в колонки
@@ -12,6 +31,7 @@ def convert_rows_to_columns(data_massive_to_convert):
         for x in range(len(data_massive_to_convert)):
             data_massive_converted[y].append(data_massive_to_convert[x][y])
     return  data_massive_converted
+
 
 def prepare_table_data_from_txt(path_to_data, delimeter = '\t', header_row = 1, units_row = 2):
     """Функция prepare_table_data_from_txt Версия 1.0
@@ -58,19 +78,22 @@ def put_table_in_qtable_wiget(header, table_wiget, data):
     """Function to plot table (на вход список заголовков и данные таблицы) into QTableWidget
     При помещении таблицы в QTableWidget отдельно показываются заголовки (строка заголовков)
     Нумеруются ряды (крайняя левая колонка)"""
-    table_wiget.setRowCount(len(data[0]))  # Устанавливаем колличество рядов для таблицы
-    table_wiget.setColumnCount(len(data))  # Устанавливаем колличество колонок для таблицы
-    table_wiget.setHorizontalHeaderLabels(header)  # Устанавливаем в качестве заголовков список шапки
-    # Создание заголовка для рядов
-    row_header = []
-    #for x in range(0, len(data[0])):
-    #    row_header.append("row №" + str(x))
-    #table_wiget.setVerticalHeaderLabels(row_header)  # Установка сформированного заголовка для рядов
-    table_wiget.verticalHeader().setVisible(False)
-    # Добавление данных в таблицу
-    for x in range(0, len(data)):
-        for y in range(0, len(data[x])):
-            table_wiget.setItem(y, x, QTableWidgetItem(str(data[x][y])))
+    if len(data) == len(header):
+        table_wiget.setRowCount(len(data[0]))  # Устанавливаем колличество рядов для таблицы
+        table_wiget.setColumnCount(len(data))  # Устанавливаем колличество колонок для таблицы
+        table_wiget.setHorizontalHeaderLabels(header)  # Устанавливаем в качестве заголовков список шапки
+        # Создание заголовка для рядов
+        row_header = []
+        #for x in range(0, len(data[0])):
+        #    row_header.append("row №" + str(x))
+        #table_wiget.setVerticalHeaderLabels(row_header)  # Установка сформированного заголовка для рядов
+        table_wiget.verticalHeader().setVisible(False)
+        # Добавление данных в таблицу
+        for x in range(0, len(data)):
+            for y in range(0, len(data[x])):
+                table_wiget.setItem(y, x, QTableWidgetItem(str(data[x][y])))
+    else:
+        print(F'Imposible to load data due to ammount of headers {len(header)} differ from columns ammount {len(data)}')
 
 def prepare_two_row_data(x_col_name, y_col_name, table):
     """Подготовка данных двух столбцов из табличного виджета QTableWidget по имени столбцов
