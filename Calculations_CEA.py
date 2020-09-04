@@ -3,6 +3,7 @@ import numpy as np
 from Prepare_data_CEA import prepare_two_row_data
 
 class Statistics:
+    """Statistics class provide methods for work with stat"""
 
     '''
     The standard deviation is the square
