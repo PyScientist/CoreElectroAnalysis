@@ -14,10 +14,13 @@ from CoreElectroAnalysisMainWindow import Ui_MainWindow
 
 from matplotlib import pyplot as plt
 
-from Prepare_data_CEA import prepare_table_data_from_txt,\
-                             put_table_in_qtable_wiget,\
+from Prepare_data_CEA import prepare_table_data_from_txt, \
+                             put_table_in_qtable_wiget, \
                              modify_cells, \
-                             mnemonics_adjustments
+                             mnemonics_adjustments, \
+                             set_uniq_data_to_listwidget, \
+                             find_checked_categiries, \
+                             row_filter_for_categories
 
 from Mpl_CEA import MyMplCanavas,\
                     prepare_abstract_canvas_and_toolbar,\
@@ -44,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Method for additional adjustment of widgets in main window of the application
         """
-        self.setWindowTitle('CoreElectroAnalysis v2.0 -- copyright Dmitriev S.A. 10.07.2020 --')
+        self.setWindowTitle('CoreElectroAnalysis v2.1 -- copyright Dmitriev S.A. 04.09.2020 --')
         self.setWindowIcon(QIcon(QPixmap('./figures/application_icon_core_sample.png')))
 
         # Button for choose name of the source file for analysis
@@ -57,7 +60,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.LoadDataButton.setIcon(QIcon(QPixmap('./figures/Load_Data.png')))
         self.LoadDataButton.setIconSize(QSize(50, 50))
 
-
+        # Button for category choosing
+        self.GetCategoriesButton.clicked.connect(self.initialize_categories)
 
         # Button for report on studied data preporation
         self.PlotReportButton.toggled.connect(self.plot_report)
@@ -66,6 +70,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Button for displaying the chart Matplotlib Porosity-m and tools to this diagram
         self.AdjustPorosityMButton.clicked.connect(self.adjust_porosity_m_method)
         # Creating a vertical placement in the QWidget widget for displaying graphs
+
+
         self.companovka_for_mpl = QVBoxLayout(self.MplWidget)
         # Creating a vertical placement in the QWidget widget to display the toolbar for porosity-m
         self.ToolPaletteVerticalLayout = QVBoxLayout(self.ToolbarWidget)
@@ -81,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Get link to axes and plot the data
         axes = canvas.figure.get_children()[1]
         axes.cla()
-        plot_data_on_por_m(table=self.InitDataTable, axes=axes)
+        plot_data_on_por_m(table=self.InitDataTable, axes=axes, row_to_exclude=self.rows_not_satisfy_filter)
 
         # Check is the tools-palette for porosity-m exist if it is delete it
         if hasattr(self, 'ButtonsSetForPorosityMAnalysis'):
@@ -120,8 +126,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             print (F"File {file_path} is not exists, please correct path and try one more time!")
 
+        set_uniq_data_to_listwidget(self.InitDataTable, self.listWidget_well_chose, "WELL")
+        set_uniq_data_to_listwidget(self.InitDataTable, self.listWidget_zone_chose, "ZONE")
+        set_uniq_data_to_listwidget(self.InitDataTable, self.listWidget_lith_chose, "LITH")
+
+
+    def initialize_categories(self):
+        pass
+
     def plot_data(self):
         """Method for performing calculations and plotting data in matplotlib figures"""
+
+        # find out what categories are chosen for further processing
+        checked_dict = find_checked_categiries(self.listWidget_well_chose,self.listWidget_zone_chose, self.listWidget_lith_chose)
+        # find out the row numbers rows which not satisfying the selection criteria
+        self.rows_not_satisfy_filter = row_filter_for_categories(checked_dict, self.InitDataTable)
+
 
         self.del_members(self.companovka_for_mpl.parent().children()[1:])
 
@@ -136,28 +156,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Adding a widget with a matplotlib canvas to display the histogram
         canvas1 = prepare_canvas(layout=self.companovka_for_mpl)
 
-        # Calculating the average value of m for the selected source data
-        m_avg = calculate_m(self)
-
         # Getting a link to axis 1
         axes = canvas.figure.get_children()[1]
 
         # Calling methods for displaying a function and placing source data on a scatter chart
         axes.cla()
-        plot_m_mean_line(m_avg = m_avg, axes = axes)
-        plot_data_on_por_ff(table=self.InitDataTable, axes=axes)
-        axes.annotate(F'The average value of "m"={round(m_avg, 3)}', xy=(0.015, 3))
-        axes.annotate(F'The "a" value = 1', xy=(0.015, 1.5))
+
         axes.grid(True, c='lightgrey', alpha=0.5, which='major')
         axes.grid(True, c='lightgrey', alpha=0.2, which='minor')
 
         # Getting a link to axis 2
         axes1 = canvas1.figure.get_children()[1]
+
         # Вызываем метод отображения гистограммы значений m
         axes1.cla()
-        plot_hist_of_m(table=self.InitDataTable, axes=axes1)
         axes1.grid(True, c='lightgrey', alpha=0.5, which='major')
-        # Печатаем среднее значение m и a=1 на кроссплоте
+
+        if self.combobox_mode.currentText() == 'general':
+
+            # Calculating the average value of m for the selected source data
+            m_avg = calculate_m(self, row_to_exclude=self.rows_not_satisfy_filter)
+
+            plot_m_mean_line(m_avg = m_avg, axes = axes)
+            plot_data_on_por_ff(table=self.InitDataTable, axes=axes, row_to_exclude=self.rows_not_satisfy_filter)
+            # Печатаем среднее значение m и a=1 на кроссплоте
+            axes.annotate(F'The average value of "m"={round(m_avg, 3)}', xy=(0.015, 3))
+            axes.annotate(F'The "a" value = 1', xy=(0.015, 1.5))
+
+            plot_hist_of_m(table=self.InitDataTable, axes=axes1, row_to_exclude=self.rows_not_satisfy_filter)
+
+        elif self.combobox_mode.currentText() == 'sampling':
+            pass
+        else:
+            pass
 
     @staticmethod
     def del_members(widgets):

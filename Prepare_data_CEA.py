@@ -1,24 +1,26 @@
-from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QListWidgetItem
 
 from PyQt5.QtCore import Qt
-
 
 def mnemonics_adjustments(headers):
     """Mnemonics adjustments in header according chosen aliases"""
 
-    # Porosity mnemonic dictionary set
+    # Mnemonic dictionary setup
     mnemonics_dict = {'POR': ['POR','Кп','Porosity','Open porosity','Por.'],
                       'RT' : ['RT','Resistivity','УЭС'],
+                      'FF': ['FF', 'Рп', 'Formation Factor', 'Параметр пористости'],
+                      'ZONE': ['FORMATION', 'PLAST', 'ZONE', 'Пласт', 'Зона'],
+                      'WELL': ['WELL', 'скв.', 'скважина', 'номер скважины'],
+                      'NLAB': ['NLAB', 'номер образца', 'образец', 'laboratory namber'],
+                      'LITH': ['LITH', 'литотип', 'петротип', 'PETROTYPE'],
                       'RW' : ['RW', 'Water Resistivity']}
 
     for header in range(len(headers)):  # manipulating headers
         for alias in mnemonics_dict.keys():  # manipulating aliases
             for id in range(len(mnemonics_dict[alias])):  # manipulating mnemonics
-                # if mnemonic matches the initial header then header changes to alias
+                # if mnemonic matches the initial header then header mnemonic changes to alias
                 if headers[header] == mnemonics_dict[alias][id]:
-                    print(headers[header])
                     headers[header] = alias
-                    print(headers[header])
 
 
 def convert_rows_to_columns(data_massive_to_convert):
@@ -74,6 +76,7 @@ def prepare_table_data_from_txt(path_to_data, delimeter = '\t', header_row = 1, 
         data_table = {'header': header, 'units': units, 'data': data}
         return data_table
 
+
 def put_table_in_qtable_wiget(header, table_wiget, data):
     """Function to plot table (на вход список заголовков и данные таблицы) into QTableWidget
     При помещении таблицы в QTableWidget отдельно показываются заголовки (строка заголовков)
@@ -94,6 +97,7 @@ def put_table_in_qtable_wiget(header, table_wiget, data):
                 table_wiget.setItem(y, x, QTableWidgetItem(str(data[x][y])))
     else:
         print(F'Imposible to load data due to ammount of headers {len(header)} differ from columns ammount {len(data)}')
+
 
 def prepare_two_row_data(x_col_name, y_col_name, table):
     """Подготовка данных двух столбцов из табличного виджета QTableWidget по имени столбцов
@@ -117,6 +121,7 @@ def prepare_two_row_data(x_col_name, y_col_name, table):
     except:
       return column_one_container, column_two_container
 
+
 def get_data_from_QTableWidget(QTableWidget_input):
     header = []
     array = []
@@ -136,3 +141,67 @@ def modify_cells(TableWidget):
             TableWidget.item(row, column).setTextAlignment(Qt.AlignCenter)
     TableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
+
+def add_element_in_q_list_widget(list_widget, element):
+    """Function which add item in list "QListWidget" the function obtains
+    "item" and "QListWidget" instance where it is need to add "item"
+    """
+    item = QListWidgetItem()  # Create instance of list item for QListWidget
+    item.setText(element)  # Set text for QListWidgetItem instance
+    item.setCheckState(Qt.Checked)
+    list_widget.addItem(item)  # Adding QListWidgetItem instance into the QListWidget
+
+
+def set_uniq_data_to_listwidget(Table_obj, listwidget_obj, column_name):
+    """Function to plo uniq values of parameter in corresponding ListWidget"""
+    listwidget_obj.clear()
+    unique = []
+    for column in range(Table_obj.columnCount()):
+        if Table_obj.horizontalHeaderItem(column).text() == column_name:
+            for row in range(Table_obj.rowCount()):
+                if unique.count(Table_obj.item(row, column).text()) < 1:
+                    unique.append(Table_obj.item(row, column).text())
+
+    for element in unique:
+        add_element_in_q_list_widget(listwidget_obj, element)
+
+
+def find_checked_categiries(list_w_wells, list_w_zones, list_w_lith):
+
+    def process(list_w):
+        list_checked = []
+        for row in range(list_w.count()):
+            if list_w.item(row).checkState() == Qt.Checked:
+                list_checked.append(list_w.item(row).text())
+        return list_checked
+
+    return {'wells': process(list_w_wells), 'zones': process(list_w_zones), 'lith': process(list_w_lith)}
+
+
+def row_filter_for_categories(checked_dict, table):
+
+    well_column = None
+    zone_column = None
+    lith_column = None
+
+    for column in range(table.columnCount()):
+        column_name = table.horizontalHeaderItem(column).text()
+        if column_name == 'WELL':
+            well_column = column
+        if column_name == 'ZONE':
+            zone_column = column
+        if column_name == 'LITH':
+            lith_column = column
+
+    row_to_exclude = []
+
+    for row in range(table.rowCount()):
+        if checked_dict['wells'].count(table.item(row, well_column).text()) < 1 or \
+           checked_dict['zones'].count(table.item(row, zone_column).text()) < 1 or \
+           checked_dict['lith'].count(table.item(row, lith_column).text()) < 1:
+           row_to_exclude.append(row)
+
+    if len(row_to_exclude) > 0:
+        row_to_exclude.sort(reverse=True)
+
+    return row_to_exclude

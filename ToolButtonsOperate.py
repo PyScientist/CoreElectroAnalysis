@@ -8,9 +8,7 @@ from PyQt5.QtCore import QSize
 
 from Prepare_data_CEA import get_data_from_QTableWidget,\
                              put_table_in_qtable_wiget,\
-                             convert_rows_to_columns,\
                              modify_cells
-
 
 from Calculations_CEA import prepare_m_list
 
@@ -62,23 +60,30 @@ class ButtonsSetForPorosityMAnalysis():
             button_layout.addWidget(button)
             # Prepare signals for buttons
             if button.objectName() == 'Button_add_m_value':
-                button.clicked.connect(self.Button_add_m_value_clicked)
+               button.clicked.connect(self.Button_add_m_value_clicked)
+            if button.objectName() == 'Button_Select_dots':
+               button.clicked.connect(self.Button_Select_dots_clicked)
 
     def Button_add_m_value_clicked(self):
 
         header, array = get_data_from_QTableWidget(self.parent.InitDataTable)
         m_list = prepare_m_list(self.parent.InitDataTable)
-        header.append('m')
-        array.append(m_list)
 
-        put_table_in_qtable_wiget(header, self.parent.InitDataTable, array)
-        modify_cells(self.parent.InitDataTable)
+        m_exists_flag = False
+        for column in range(0, self.parent.InitDataTable.columnCount()):
+            if self.parent.InitDataTable.horizontalHeaderItem(column).text() == 'm':
+                m_exists_flag = True
+        if m_exists_flag:
+            print("m already exists")
+        else:
+            header.append('m')
+            array.append(m_list)
 
+            put_table_in_qtable_wiget(header, self.parent.InitDataTable, array)
+            modify_cells(self.parent.InitDataTable)
 
-
-
-
-
+    def Button_Select_dots_clicked(self):
+        pass
 
     def delete_buttons_set(self):
         def delete_single(button):

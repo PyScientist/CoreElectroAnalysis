@@ -80,25 +80,110 @@ p, li { white-space: pre-wrap; }
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
       <property name="spacing">
        <number>3</number>
       </property>
       <item>
-       <widget class="QTableWidget" name="InitDataTable">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>300</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>400</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="Table_layout">
+        <item>
+         <layout class="QHBoxLayout" name="Filtrlayout">
+          <item>
+           <widget class="QComboBox" name="combobox_mode">
+            <item>
+             <property name="text">
+              <string>general</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>sampling</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_wells">
+            <item>
+             <widget class="QCheckBox" name="wells_sampling_checkbox">
+              <property name="text">
+               <string>Wells</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="listWidget_well_chose">
+              <property name="maximumSize">
+               <size>
+                <width>90</width>
+                <height>150</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_zones">
+            <item>
+             <widget class="QCheckBox" name="zones_sampling_checkbox">
+              <property name="text">
+               <string>Zones</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="listWidget_zone_chose">
+              <property name="maximumSize">
+               <size>
+                <width>90</width>
+                <height>150</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_lith">
+            <item>
+             <widget class="QCheckBox" name="lith_sampling_checkbox">
+              <property name="text">
+               <string>Lith</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="listWidget_lith_chose">
+              <property name="maximumSize">
+               <size>
+                <width>90</width>
+                <height>150</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="InitDataTable">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>500</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QWidget" name="MplWidget" native="true">
@@ -159,6 +244,37 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="GetCategoriesButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>Get categories</string>
+        </property>
+        <property name="text">
+         <string>Get Categories</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="PlotGraphButton">
         <property name="minimumSize">
          <size>
@@ -173,7 +289,7 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>Plot data</string>
+         <string>Plot (Por vs FF)</string>
         </property>
        </widget>
       </item>

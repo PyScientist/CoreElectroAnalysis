@@ -72,8 +72,8 @@ def plot_single_empty_hist():
     axes.set_ylabel('Y', fontsize=8)
     return fig, axes
 
-def plot_hist_of_m(table, axes):
-    count, bins = prepare_m_hist_details(table)
+def plot_hist_of_m(table, axes, row_to_exclude=[]):
+    count, bins = prepare_m_hist_details(table, row_to_exclude=row_to_exclude)
     axes.hist(bins[:-1], bins, weights=count)
     axes.get_figure().canvas.draw()
 
@@ -88,9 +88,14 @@ def plot_m_mean_line(m_avg, axes):
     axes.plot(por_list, ri_clac_list, color='red')
     axes.get_figure().canvas.draw()
 
-def plot_data_on_por_ff(table, axes):
+def plot_data_on_por_ff(table, axes, row_to_exclude = []):
     # Получаем из таблицы данные Кп и Рп для отображения на графике
     data_to_plot = prepare_two_row_data('POR', 'FF', table)
+
+    # Before using data remove all filtered rows
+    for x in range(len(row_to_exclude)):
+        data_to_plot[0].pop(row_to_exclude[x])
+        data_to_plot[1].pop(row_to_exclude[x])
 
     # Отображаем данные и настраиваем внений вид графика
     axes.scatter(data_to_plot[0], data_to_plot[1])
@@ -103,11 +108,23 @@ def plot_data_on_por_ff(table, axes):
     axes.set_yscale('log')
     axes.get_figure().canvas.draw()
 
-def plot_data_on_por_m(table, axes):
+
+def plot_categorial_data_on_por_ff(axes):
+    # Добавляем данные с учетом выбранных категорий на заданный график
+    pass
+
+
+def plot_data_on_por_m(table, axes, row_to_exclude=[]):
     # Расет значений m и подготовка списка с значениями по всей выборке
     m_list = []
     # Подготовка данных для расчета (импорт из таблицы)
     data_calc = prepare_two_row_data('POR', 'FF', table)
+
+    # Before using data remove all filtered rows
+    for x in range(len(row_to_exclude)):
+        data_calc[0].pop(row_to_exclude[x])
+        data_calc[1].pop(row_to_exclude[x])
+
     for x in range(len(data_calc[0])):
         m_list.append(math.log(1 / data_calc[1][x], data_calc[0][x]))
     axes.scatter(data_calc[0], m_list)
