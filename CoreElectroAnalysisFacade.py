@@ -20,7 +20,8 @@ from Prepare_data_CEA import prepare_table_data_from_txt, \
                              mnemonics_adjustments, \
                              set_uniq_data_to_listwidget, \
                              find_checked_categiries, \
-                             row_filter_for_categories
+                             row_filter_for_categories, \
+                             prepare_one_row_data
 
 from Mpl_CEA import MyMplCanavas,\
                     prepare_abstract_canvas_and_toolbar,\
@@ -29,7 +30,7 @@ from Mpl_CEA import MyMplCanavas,\
                     plot_hist_of_m,\
                     plot_data_on_por_m
 
-from Calculations_CEA import calculate_m
+from Calculations_CEA import calculate_m, Statistics
 
 from ToolButtonsOperate import ButtonsSetForPorosityMAnalysis
 
@@ -98,7 +99,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ButtonsSetForPorosityMAnalysis = ButtonsSetForPorosityMAnalysis(self.ToolPaletteVerticalLayout, self)
 
     def plot_report(self):
-        pass
+
+        # find out what categories are chosen for further processing
+        checked_dict = find_checked_categiries(self.listWidget_well_chose,self.listWidget_zone_chose, self.listWidget_lith_chose)
+        # find out the row numbers rows which not satisfying the selection criteria
+        self.rows_not_satisfy_filter = row_filter_for_categories(checked_dict, self.InitDataTable)
+
+        data_for_stat = prepare_one_row_data('POR', self.InitDataTable)
+        # Before using data remove all filtered rows
+        for x in range(len(self.rows_not_satisfy_filter)):
+            data_for_stat[0].pop(self.rows_not_satisfy_filter)
+
+        stat = Statistics(data_for_stat)
+
 
     def choose_init_data_file_dialog(self):
         """

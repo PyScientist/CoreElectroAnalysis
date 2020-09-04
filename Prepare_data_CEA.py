@@ -98,6 +98,21 @@ def put_table_in_qtable_wiget(header, table_wiget, data):
     else:
         print(F'Imposible to load data due to ammount of headers {len(header)} differ from columns ammount {len(data)}')
 
+def prepare_one_row_data(x_col_name, table):
+    """Подготовка данных одного столбца из табличного виджета QTableWidget по имени столбца
+    при возникновении ошибки функция возвращает пустой список иначе список со значениями требуемого ряда"""
+    column_one_container = []
+    x = None  # Изначально x не задан
+    for column in range(0, table.columnCount()): #Цикл перебор имен в шапке
+        column_name = table.horizontalHeaderItem(column).text()
+        if column_name == x_col_name:  # Если текст в колонке совпадает с названием требуемой колонки для переменной x
+           x = column  # Присвоение номера колонки переменной x
+    try:
+      for i in range(0, table.rowCount()):  # Перебираем ряды добовляя значения колонки с индексом x в список
+          column_one_container.append(float(table.item(i, x).text()))
+      return column_one_container
+    except:
+      return column_one_container
 
 def prepare_two_row_data(x_col_name, y_col_name, table):
     """Подготовка данных двух столбцов из табличного виджета QTableWidget по имени столбцов
