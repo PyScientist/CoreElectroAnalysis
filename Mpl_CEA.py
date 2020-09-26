@@ -14,7 +14,7 @@ from Calculations_CEA import prepare_m_hist_details
 
 class MyMplCanavas(FigureCanvasQTAgg):
     '''
-    Класс холста Qt для помещения рисунка Matplotlib
+    Класс холста Qt для помещения рисунка Matplotlib!
     '''
     def __init__(self, fig):
         super().__init__(fig)
