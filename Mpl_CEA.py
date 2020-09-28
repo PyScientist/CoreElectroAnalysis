@@ -78,7 +78,7 @@ def plot_hist_of_m(table, axes, row_to_exclude=[]):
     axes.get_figure().canvas.draw()
 
 def plot_m_mean_line(m_avg, axes):
-    # Подготавливаем список с значениями пористости (Кп) с 0.01 до 1 с шагом 0.01 д.е.
+    # Preparing list with Porosity values from 0.01 to 1 with step 0.01 v/v
     por_list = np.arange(0.01, 1.01, 0.01)
     # Рассчитываем список с значениями Рп изсходя из среднего значения m
     ri_clac_list = []
