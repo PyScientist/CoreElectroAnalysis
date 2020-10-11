@@ -98,7 +98,7 @@ def plot_data_on_por_ff(table, axes, row_to_exclude = []):
         data_to_plot[1].pop(row_to_exclude[x])
 
     # Отображаем данные и настраиваем внений вид графика
-    axes.scatter(data_to_plot[0], data_to_plot[1])
+    axes.scatter(data_to_plot[0], data_to_plot[1], c='green')
     axes.set_title('Сопоставление Кп и Рп', fontsize=10)
     axes.set_xlabel('Кп, д.е.', fontsize=12)
     axes.set_ylabel('Pп', fontsize=12)
