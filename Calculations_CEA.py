@@ -67,7 +67,7 @@ def prepare_m_list(table):
 
 def calculate_m(parent, row_to_exclude=[]):
     """
-    Расчитываем среднее значение коэффициента m в уравнение Арчи по данным импортируемым из Таблицы
+    Calculate среднее значение коэффициента m в уравнение Арчи по данным импортируемым из Таблицы
     входной параметр parent это ссылка на экземпляр класса основного приложения
     """
     data_calc = prepare_two_row_data('POR', 'FF', parent.InitDataTable)
