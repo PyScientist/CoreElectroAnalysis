@@ -48,7 +48,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Method for additional adjustment of widgets in main window of the application
         """
-        self.setWindowTitle('CoreElectroAnalysis v2.1 -- copyright Dmitriev S.A. 04.09.2020 --')
+        self.setWindowTitle('CoreElectroAnalysis v2.2 -- copyright Dmitriev S.A. 01.11.2020 --')
         self.setWindowIcon(QIcon(QPixmap('./figures/application_icon_core_sample.png')))
 
         # Button for choose name of the source file for analysis
@@ -181,7 +181,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Getting a link to axis 2
         axes1 = canvas1.figure.get_children()[1]
 
-        # Вызываем метод отображения гистограммы значений m
+        # Call method of displaying histogram of m values
         axes1.cla()
         axes1.grid(True, c='lightgrey', alpha=0.5, which='major')
 
@@ -190,9 +190,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Calculating the average value of m for the selected source data
             m_avg = calculate_m(self, row_to_exclude=self.rows_not_satisfy_filter)
 
-            plot_m_mean_line(m_avg = m_avg, axes = axes)
+            plot_m_mean_line(m_avg=m_avg, axes=axes)
             plot_data_on_por_ff(table=self.InitDataTable, axes=axes, row_to_exclude=self.rows_not_satisfy_filter)
-            # Печатаем среднее значение m и a=1 на кроссплоте
+            # Print avg value of m for a=1 on cross-plot
             axes.annotate(F'The average value of "m"={round(m_avg, 3)}', xy=(0.015, 3))
             axes.annotate(F'The "a" value = 1', xy=(0.015, 1.5))
 
@@ -212,11 +212,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 plt.close(widget.figure)
             del widget
 
+
 def main_application():
     app = QApplication(sys.argv)
     main = MainWindow()
     main.show()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
    main_application()
