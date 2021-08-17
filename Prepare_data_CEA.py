@@ -51,6 +51,8 @@ def prepare_table_data_from_txt(path_to_data, delimeter = '\t', header_row = 1, 
     input_file = open(path_to_data, 'r', encoding='utf-8')
     red_data = input_file.readlines()
     input_file.close()
+    # Due to failure processing related with \ufeff (unicode mark) replece it from first line start
+    red_data[0]=red_data[0].replace('\ufeff','')
     # Если файл содержит данные то перебираем строки
     if len(red_data) > 0:
         # Перебираем строки
@@ -168,7 +170,7 @@ def add_element_in_q_list_widget(list_widget, element):
 
 
 def set_uniq_data_to_listwidget(Table_obj, listwidget_obj, column_name):
-    """Function to plo uniq values of parameter in corresponding ListWidget"""
+    """Function to add uniq values of parameter in corresponding ListWidget"""
     listwidget_obj.clear()
     unique = []
     for column in range(Table_obj.columnCount()):
